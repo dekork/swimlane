@@ -53,9 +53,11 @@ jobs:
             sudo apt-get update
             sudo apt-get install mysql-client
             mysql -h 127.0.0.1 -u swimlane -ppassw0rd swimlane < config/init.sql
-      - run:
-          name: Run tests
-          command: npm test
+            
+      # Uncomment this after adding tests
+      #- run:
+      #    name: Run tests
+      #    command: npm test
 
 workflows:
   # Below is the definition of your workflow.
