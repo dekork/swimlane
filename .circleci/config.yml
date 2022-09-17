@@ -52,7 +52,7 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install mysql-client
-            mysql -h 127.0.0.1 -u swimlane -ppassw0rd swimlane < config/init.sql
+            mysql -h 127.0.0.1 -u swimlane -ppassw0rd swimlane < backend/config/init.sql
             
       # Uncomment this after adding tests
       #- run:
