@@ -6,7 +6,11 @@ var connection = require('../config/database');
 //This may be used for manual testing
 router.get('/', function(req, res, next) {
   var boatslist = connection.query('SELECT * FROM boats', function (error, results, fields) {
-    if (error) throw error;
+    if (error)
+    {
+      res.sendStatus(418);
+      return;
+    };
     var boatsList = results;
     res.render('index', { title: 'Express', boats: boatsList});
   });
