@@ -70,8 +70,8 @@ workflows:
       - aws-ecr/build-and-push-image:
           requires: 
             - build-and-test-backend
-          repo: "${AWS_RESOURCE_NAME_PREFIX}"
-          tag: "${CIRCLE_SHA1}"
+          repo: "${AWS_RESOURCE_NAME_PREFIX}-backend"
+          tag: "latest"
           path: ./backend/
 
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
