@@ -32,6 +32,7 @@ jobs:
       - node/install-packages:
           # If you are using yarn, change the line below from "npm" to "yarn"
           pkg-manager: npm
+          app-dir: ~/backend
       - run:
           # Our primary container isn't MYSQL so run a sleep command until it's ready.
           # wait taken from: https://circleci.com/docs/2.0/postgres-config/#example-mysql-project
