@@ -23,15 +23,16 @@ jobs:
           MYSQL_PASSWORD: passw0rd
     # Then run your tests!
     # CircleCI will report the results back to your VCS provider.
+    working_directory: ~/swimlane/backend
     steps:
       # Checkout the code as the first step.
-      - checkout
+      - checkout:
+          path: ~/swimlane
       # Next, the node orb's install-packages step will install the dependencies from a package.json.
       # The orb install-packages step will also automatically cache them for faster future runs.
       - node/install-packages:
           # If you are using yarn, change the line below from "npm" to "yarn"
           pkg-manager: npm
-          app-dir: ~/backend
       - run:
           # Our primary container isn't MYSQL so run a sleep command until it's ready.
           # wait taken from: https://circleci.com/docs/2.0/postgres-config/#example-mysql-project
