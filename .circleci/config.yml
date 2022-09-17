@@ -69,7 +69,11 @@ workflows:
     jobs:
       - build-and-test-backend
       - aws-ecr/build-and-push-image:
+          requires: 
+            - build-and-test-backend
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
           tag: "${CIRCLE_SHA1}"
+          path: ~/swimlane/backend
+
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
       # - node/test
