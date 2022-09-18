@@ -13,8 +13,7 @@ if (process.env.NODE_ENV === 'development') {
             console.log("Database initialized successfully.");
         else
         {
-            console.log("Database failed to init... Ending server.")
-            throw err;
+            console.log("Database failed to init...")
         }
     })
 }
@@ -31,8 +30,9 @@ else {
             console.log("Database initialized successfully.");
         else
         {
-            console.log("Database failed to init... Ending server.")
-            throw err;
+            console.log("Database failed to init...");
+            console.log(process.env.MYSQL_HOST);
+            console.log(process.env.MYSQL_USER);
         }
     })
 
