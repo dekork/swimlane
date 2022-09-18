@@ -58,7 +58,8 @@ jobs:
 
       - run:
           name: Run tests
-          command: backend/npm test
+          working_directory: backend
+          command: npm test
 
 workflows:
   # Below is the definition of your workflow.
