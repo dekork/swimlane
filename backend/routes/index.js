@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   var boatslist = connection.query('SELECT * FROM boats', function (error, results, fields) {
     if (error)
     {
-      res.sendStatus(418);
+      res.send(error);
       return;
     };
     var boatsList = results;
