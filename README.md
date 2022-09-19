@@ -1,42 +1,57 @@
 # swimlane
 
-Technologies used:
-Backend - Node, Express, MySQL
-Frontend - 
-QA -
-DevOps - 
+swimlane is a tracker that tracks boats. This may be used tour operators, or other similar organizations. 
 
-App Requirements:
-Backend - Basic CRUD API
-/api/list/
-/api/addboat
-/api/editboat/[ID]
-/api/deleteboat/[ID]
+Boats can be placed in different swimlanes. They may be docked, outbound (out a voyage), or inbound (coming back to the dock), or out of service for maintenance. This tracker allows you to easily add and delete boats and keep track of their swimlane state.
+
+___
+#### Tech Stack Overview
+
+**`Backend`** => Node, Express, MySQL
+
+**`Frontend`** => React, React-Bootstrap
+
+**`QA`** => Jest, Supertest
+
+**`DevOps/Hosting`** => AWS ECS Fargate, AWS ECR, AWS RDS, CircleCI, GitHub
 
 
-Design/Archetecture Choices:
-Backend - Node, MySQL on AWS
-Frontend - React on AWS
-QA - Jest & Supertest to easily test http requests
-DevOps - CircleCI with AWS Code Deploy - Database CICD was not implemented, ideally I would have tried to get something like Liquibase to work with CircleCI, and use a AWS RDS instance for the database instead of combining it with my backend container.
+Database CICD was not implemented for RDS, ideally I would have tried to get something like Liquibase to work with CircleCI, and use a AWS. However I did setup a database initialization script, which should get initial deployments working easily.
 
-Planning:
-[DONE]Work on backend first
-Work on CICD and get backend working on AWS
-- I can push a dockerfile to AWS, but I need MySQL to be pushed alongside it. Doing this with a dockerfile would be messy...I decided to create an RDS instance instead.
-Once backend and CICD is working, Work on Frontend
+___
+#### API Endpoints
+GET `/api/list/`
 
-If there is an issue with the mysql connection, the backend will crash. It would be good to run the backend with something like forever (npm package).
+GET `/api/list/[ID]`
 
-Environment Variables
-The following environment variables must be set on the containers (or operating system, alternatively you can use a dotenv file [not implemented, you need to add this yourself])
+POST `/api/addboat`
 
-Backend:
-MYSQL_HOST = The address of the MySQL server/RDS instance
-MYSQL_USER = The username of the MySQL user that has CREATE and ALTER permissions on 'swimlane' (or any table)
-MYSQL_PASSWORD = The MYSQL_USER's password
+POST `/api/editboat/[ID]`
 
-Frontend:
-REACT_APP_BACKEND_SERVICE_ADDRESS = The service address of the backend API service
+DELETE `/api/deleteboat/[ID]`
+
+___
+#### Environment Variables
+The following environment variables are **required** be set on the containers (or operating system, alternatively you can use a dotenv file [not implemented, you need to add this yourself])
+
+###### Backend
+`MYSQL_HOST` The address of the MySQL server/RDS instance
+
+`MYSQL_USER` The username of the MySQL user that has CREATE and ALTER permissions on 'swimlane' (or any table)
+
+`MYSQL_PASSWORD` The MYSQL_USER's password
+
+##### Frontend
+`REACT_APP_BACKEND_SERVICE_ADDRESS` The service address of the backend API service
+___
+
+#### Planning:
+- [x] Work on backend first (on development environment)
+- [x] Work on ECS/CICD config and push backend to AWS ECS
+- [x] Work on Frontend (on development environment)
+- [x] Work on ECS/CICD config for front end and push backend to AWS ECS
+- [ ] Add more frontend tests
+- [ ] Add enviroment variable error checking
+___
 
 
