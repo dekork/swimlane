@@ -12,12 +12,15 @@ describe("GET /api/list", () => {
 // Test adding a boat, then remove the added boat in sql to keep data unaltered.
 describe("POST /api/addboat", () => {
     test("Add a boat successfully then delete manually in SQL", async () => {
-        return request(app).post("/api/addboat")
+        request(app).post("/api/addboat")
             .send({vessel_name: "Test2boat3dfas52624", operator_name: "Oper@tor3250dfs823"})
             .set('Accept', 'application/json')
             .expect(200)
             .then((res) => {
-                connection.query('DELETE from boats WHERE id=?', res.text);
+                connection.query('DELETE from boats WHERE id=' + res.text, function(err, res){
+                    if (err)
+                        fail('Failed to delete added entry');
+                });
             });
     });
 });
