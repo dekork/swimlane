@@ -76,18 +76,6 @@ jobs:
           pkg-manager: npm
           app-dir: frontend/
       - run:
-          # Our primary container isn't MYSQL so run a sleep command until it's ready.
-          # wait taken from: https://circleci.com/docs/2.0/postgres-config/#example-mysql-project
-          name: Waiting for MySQL to be ready
-          command: |
-            for i in `seq 1 10`;
-            do
-              nc -z 127.0.0.1 3306 && echo Success && exit 0
-              echo -n .
-              sleep 1
-            done
-            echo Failed waiting for MySQL && exit 1
-      - run:
           name: Run frontend tests
           working_directory: frontend
           command: npm test
