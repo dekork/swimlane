@@ -5,7 +5,7 @@ const request = require("supertest");
 // Simple test of getting full list of boats from api
 describe("GET /api/list", () => {
     test("Gets the full list of boats", async () => {
-        return request(app).get("/api/list").expect(200);
+        request(app).get("/api/list").expect(200);
     });
 });
 
