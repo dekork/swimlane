@@ -12,7 +12,7 @@ orbs:
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
-  build-and-test:
+  build-and-test-backend:
     # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
@@ -34,7 +34,43 @@ jobs:
           # If you are using yarn, change the line below from "npm" to "yarn"
           pkg-manager: npm
           app-dir: backend/
-      
+      - run:
+          # Our primary container isn't MYSQL so run a sleep command until it's ready.
+          # wait taken from: https://circleci.com/docs/2.0/postgres-config/#example-mysql-project
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      # init sql database
+      - run:
+          name: init sql database
+          command: |
+            sudo apt-get update
+            sudo apt-get install mysql-client
+            mysql -h 127.0.0.1 -u swimlane -ppassw0rd swimlane < backend/config/init.sql
+      - run:
+          name: Run backend tests
+          working_directory: backend
+          command: npm test
+
+build-and-test-frontend:
+    # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
+    # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
+    docker:
+      - image: cimg/node:lts #using 16.15
+    # Then run your tests!
+    # CircleCI will report the results back to your VCS provider.
+    steps:
+      # Checkout the code as the first step.
+      - checkout
+      # Next, the node orb's install-packages step will install the dependencies from a package.json.
+      # The orb install-packages step will also automatically cache them for faster future runs.
       - node/install-packages:
           # If you are using yarn, change the line below from "npm" to "yarn"
           pkg-manager: npm
@@ -51,20 +87,6 @@ jobs:
               sleep 1
             done
             echo Failed waiting for MySQL && exit 1
-      
-      # init sql database
-      - run:
-          name: init sql database
-          command: |
-            sudo apt-get update
-            sudo apt-get install mysql-client
-            mysql -h 127.0.0.1 -u swimlane -ppassw0rd swimlane < backend/config/init.sql
-            
-
-      - run:
-          name: Run backend tests
-          working_directory: backend
-          command: npm test
       - run:
           name: Run frontend tests
           working_directory: frontend
@@ -75,20 +97,21 @@ workflows:
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
   # CircleCI will run this workflow on every commit.
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
-  sample:
+  build-test-and-push-ecs:
     jobs:
-      - build-and-test
+      - build-and-test-backend
+      - build-and-test-frontend 
       - aws-ecr/build-and-push-image:
           name: build-and-push-backend
           requires: 
-            - build-and-test
+            - build-and-test-backend 
           repo: "${AWS_RESOURCE_NAME_PREFIX}-backend"
           tag: '${CIRCLE_SHA1}'
           path: ./backend/
       - aws-ecr/build-and-push-image:
           name: build-and-push-frontend
           requires: 
-            - build-and-test
+            - build-and-test-frontend
           repo: "${AWS_RESOURCE_NAME_PREFIX}-frontend"
           tag: '${CIRCLE_SHA1}'
           path: ./frontend/
