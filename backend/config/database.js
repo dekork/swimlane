@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'development') {
         }
     })
     tempconnection.end(function(err){
-        console.log('Finishing database init. Errors:' + (err) ? err : "None.");
+        console.log('Finishing database init.');
     });
     var connection = mysql.createPool({
         host: 'localhost',
