@@ -12,7 +12,7 @@ orbs:
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
-  build-and-test-backend:
+  build-and-test:
     # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
@@ -34,6 +34,11 @@ jobs:
           # If you are using yarn, change the line below from "npm" to "yarn"
           pkg-manager: npm
           app-dir: backend/
+      
+      - node/install-packages:
+          # If you are using yarn, change the line below from "npm" to "yarn"
+          pkg-manager: npm
+          app-dir: frontend/
       - run:
           # Our primary container isn't MYSQL so run a sleep command until it's ready.
           # wait taken from: https://circleci.com/docs/2.0/postgres-config/#example-mysql-project
@@ -57,10 +62,14 @@ jobs:
             
 
       - run:
-          name: Run tests
+          name: Run backend tests
           working_directory: backend
           command: npm test
-
+      - run:
+          name: Run frontend tests
+          working_directory: frontend
+          command: npm test
+ 
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
@@ -68,18 +77,32 @@ workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
   sample:
     jobs:
-      - build-and-test-backend
+      - build-and-test
       - aws-ecr/build-and-push-image:
+          name: build-and-push-backend
           requires: 
-            - build-and-test-backend
+            - build-and-test
           repo: "${AWS_RESOURCE_NAME_PREFIX}-backend"
           tag: '${CIRCLE_SHA1}'
           path: ./backend/
+      - aws-ecr/build-and-push-image:
+          name: build-and-push-frontend
+          requires: 
+            - build-and-test
+          repo: "${AWS_RESOURCE_NAME_PREFIX}-frontend"
+          tag: '${CIRCLE_SHA1}'
+          path: ./frontend/
       - aws-ecs/deploy-service-update:
           cluster: "${AWS_RESOURCE_NAME_PREFIX}"
           container-image-name-updates: 'container=${AWS_RESOURCE_NAME_PREFIX}-backend,tag=${CIRCLE_SHA1}'
           family: '${AWS_RESOURCE_NAME_PREFIX}-backend'
           requires:
-            - aws-ecr/build-and-push-image
-      # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
-      # - node/test
+            - aws-ecr/build-and-push-backend
+
+      # - aws-ecs/deploy-service-update:
+      #     cluster: "${AWS_RESOURCE_NAME_PREFIX}"
+      #     container-image-name-updates: 'container=${AWS_RESOURCE_NAME_PREFIX}-frontend,tag=${CIRCLE_SHA1}'
+      #     family: '${AWS_RESOURCE_NAME_PREFIX}-frontend'
+      #     requires:
+      #       - aws-ecr/build-and-push-frontend
+
