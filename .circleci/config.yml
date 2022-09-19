@@ -109,11 +109,9 @@ workflows:
           family: '${AWS_RESOURCE_NAME_PREFIX}-backend'
           requires:
             - build-and-push-backend
-
-      # - aws-ecs/deploy-service-update:
-      #     cluster: "${AWS_RESOURCE_NAME_PREFIX}"
-      #     container-image-name-updates: 'container=${AWS_RESOURCE_NAME_PREFIX}-frontend,tag=${CIRCLE_SHA1}'
-      #     family: '${AWS_RESOURCE_NAME_PREFIX}-frontend'
-      #     requires:
-      #       - aws-ecr/build-and-push-frontend
-
+      - aws-ecs/deploy-service-update:
+          cluster: "${AWS_RESOURCE_NAME_PREFIX}"
+          container-image-name-updates: 'container=${AWS_RESOURCE_NAME_PREFIX}-frontend,tag=${CIRCLE_SHA1}'
+          family: '${AWS_RESOURCE_NAME_PREFIX}-frontend'
+          requires:
+            - build-and-push-frontend
