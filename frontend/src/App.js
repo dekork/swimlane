@@ -181,7 +181,7 @@ function App() {
                             <th>Docked</th>
                             </thead>
                             <tbody>
-                            {dockedData.map((item, i) => (<tr key={i} onClick={() => openModal(item)}>
+                            {dockedData.map((item, i) => (<tr key={i} onClick={() => openModal(Object.assign({},item))}>
                                     <td>{item.vessel_name}</td>
                                 </tr>))}
 
@@ -194,7 +194,7 @@ function App() {
                             <th>Outbound</th>
                             </thead>
                             <tbody>
-                            {outboundData.map((item, i) => (<tr key={i} onClick={() => openModal(item)}>
+                            {outboundData.map((item, i) => (<tr key={i} onClick={() => openModal(Object.assign({},item))}>
                                     <td>{item.vessel_name}</td>
                                 </tr>))}
 
@@ -207,7 +207,7 @@ function App() {
                             <th>Inbound</th>
                             </thead>
                             <tbody>
-                            {inboundData.map((item, i) => (<tr key={i} onClick={() => openModal(item)}>
+                            {inboundData.map((item, i) => (<tr key={i} onClick={() => openModal(Object.assign({},item))}>
                                     <td>{item.vessel_name}</td>
                                 </tr>))}
 
@@ -220,7 +220,7 @@ function App() {
                             <th>Maintenance</th>
                             </thead>
                             <tbody>
-                            {maintenanceData.map((item, i) => (<tr key={i} onClick={() => openModal(item)}>
+                            {maintenanceData.map((item, i) => (<tr key={i} onClick={() => openModal(Object.assign({},item))}>
                                     <td>{item.vessel_name}</td>
                                 </tr>))}
 
