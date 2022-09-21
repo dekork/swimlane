@@ -92,6 +92,7 @@ ___
 - Attempting to make things into components took some time, I didn't have time to make the frontend look a bit better. I would have liked to made some padding around the add boat button, and perhaps add some icons. In the mobile view the boat status selector (when editing) leaks outside of the screen bounds in some cases, which I also would have fixed if I had more time.
 - As there are multiple boat operators I assumed we would also want to have the operator names of each boat. This was not explicitly stated in the requirements but there was lots of mention of boat operators, I assumed this would be a good field to have - especially since adding it did not take too long to implement anyway.
 - I assumed this to be only used by EcoCatch tours so I hard coded the name.
+- The assignment wanted a "view" functionality however I implemented this in way that did not need the API to have an explicit view endpoint. Instead I only have a list function in the backend. I listed the boats by their status, and sent out it's full row data. Then on the frontend mapped only the boat names to display on the Kanban board, then displayed the rest of the data (view) once the full card (modal/pop-up) view was opened.
 ___
 #### Todo:
 - [x] Work on backend first (on development environment)
