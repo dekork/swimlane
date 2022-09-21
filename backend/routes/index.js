@@ -3,7 +3,7 @@ var router = express.Router();
 var connection = require('../config/database');
 
 /* GET home page. */
-//This may be used for manual testing
+// Display simple message about what the user has reached.
 router.get('/', function(req, res, next) {
     res.render('index');
 });
