@@ -7,6 +7,6 @@ vessel_name VARCHAR(100) NOT NULL UNIQUE,
 operator_name VARCHAR(100),
 swimlane TINYINT);
 
---If changes are needed to be made, you will need to add alter statements below,
+-- If changes are needed to be made, you will need to add alter statements below,
 --  but keep the above same so that changes will propagate correctly to
 --  an existing server that already contains the database and tables!
