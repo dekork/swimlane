@@ -163,7 +163,7 @@ function App() {
     /*TODO: turn each table into reusable components*/
     return (<div className="App">
             <header className="App-header">
-                <h1>Ecocatch Swimlanes</h1>
+                <h1>EcoCatch Swimlanes</h1>
             </header>
 
             <Container>

@@ -2,10 +2,11 @@
 
 swimlane is a tracker that tracks boats. This may be used tour operators, or other similar organizations. 
 
-Boats can be placed in different swimlanes. They may be docked, outbound (out a voyage), or inbound (coming back to the dock), or out of service for maintenance. This tracker allows you to easily add and delete boats and keep track of their swimlane state.
+Boats can be placed in different swimlanes. They may be docked, outbound, inbound, or out of service for maintenance. This tracker allows you to easily add and delete boats and keep track of their swimlane state by editing any boat.
 
-[Deployed Frontend](http://52.26.126.217/)
-[Deployed Backend](http://34.223.135.122/)
+[AWS ECS Hosted Frontend](http://52.26.126.217/)
+
+[AWS ECS Hosted Backend](http://34.223.135.122/)
 
 ___
 #### Tech Stack Overview
@@ -31,7 +32,7 @@ POST `/api/editboat/{ID}`
 DELETE `/api/deleteboat/{ID}`
 
 
-The API service was assumed to be setup as publically accessible as no user authentication is required, as well as for endpoint testing.
+The API service was assumed to be setup as publicly accessible as no user authentication is required, as well as for endpoint testing.
 ___
 #### Deployment
 To deploy this project you will need to fork this repo to your own GitHub, and have CircleCI connected to it. Then you need to setup your ECR/ECS repositories and cluster. 
@@ -77,7 +78,7 @@ Now the CircleCI script can push images to ECR, but the pipeline will fail, you 
 ___
 
 #### ECS Setup
-- Create task definitions of swimlane-backend, swimlane-frontend. Dont forget to add the envorment variables above. Frontend container needs inbound port 3001 exposed. Backend container needs inbound port 3000 exposed.
+- Create task definitions of swimlane-backend, swimlane-frontend. Don't forget to add the environment variables above. Frontend container needs inbound port 3001 exposed. Backend container needs inbound port 3000 exposed.
 - Create a cluster 'swimlane'
 - Create 2 fargate single-task linux services under the cluster one for the frontend, and one for the backend (swimlane-frontend, swimlane-backend). I used 0.5CPU/1GB RAM per task. Note the VPC/subnets for creating the load balance to give the instances static IPs.
 -Optionally create a [load balancer](https://aws.amazon.com/premiumsupport/knowledge-center/ecs-fargate-static-elastic-ip-address/) to have a static IP. If not you will need to check the task under Clusters->swimlane->Tasks tab->Click on task to view public IP.
@@ -85,13 +86,12 @@ ___
 ___
 
 #### Issues
-Database CICD was not implemented for RDS, ideally I would have tried to get something like Liquibase to work with CircleCI, and use a AWS. However I did setup a database initialization script, which should get initial deployments working easily.
-
-
-There is no HTTPS implemented as I didn't have enough time. There is no user authentication to secure or anything confidential/mission critical data, but someone could potentially man in the middle and mess up the boat tracking ;)
-
-
-I was going to cleanup the frontend further and componentalize the Modal popup and (repeated) Columns, but I ran into issues passing the modal functions back into the column. I admit ideally I should have implment these components in the first place!
+- Database CICD was not implemented for RDS, ideally I would have tried to get something like Liquibase to work with CircleCI, and use it with RDS that way. However, I did setup a database initialization script (/backend/config/init.sql), which should get initial deployments working easily.
+- There is no HTTPS implemented as I didn't have enough time. There is no user authentication to secure or anything confidential/mission critical data, but someone could potentially man in the middle and mess up the boat tracking ;)
+- I was going to cleanup the frontend further and component-ize the Modal popup and (repeated) columns, but I ran into issues passing the modal functions back into the column. I admit I should have implemented these as components in the first place! 
+- Attempting to make things into components took some time, I didn't have time to make the frontend look a bit better. I would have liked to made some padding around the add boat button, and perhaps add some icons. In the mobile view the boat status selector (when editing) leaks outside of the screen bounds in some cases, which I also would have fixed if I had more time.
+- As there are multiple boat operators I assumed we would also want to have the operator names of each boat. This was not explicitly stated in the requirements but there was lots of mention of boat operators, I assumed this would be a good field to have - especially since adding it did not take too long to implement anyway.
+- I assumed this to be only used by EcoCatch tours so I hard coded the name.
 ___
 #### Todo:
 - [x] Work on backend first (on development environment)
