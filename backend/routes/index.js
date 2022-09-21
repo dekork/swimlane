@@ -5,16 +5,7 @@ var connection = require('../config/database');
 /* GET home page. */
 //This may be used for manual testing
 router.get('/', function(req, res, next) {
-  var boatslist = connection.query('SELECT * FROM boats', function (error, results, fields) {
-    if (error)
-    {
-      res.send(error);
-      return;
-    };
-    var boatsList = results;
-    res.render('index', { title: 'Express', boats: boatsList});
-  });
-
+    res.render('index');
 });
 
 module.exports = router;
